@@ -1,6 +1,5 @@
 #include "rbtn.h"
 #include "cmsis_os.h"
-#include "stdio.h"
 #include "string.h"
 
 #define LOW 0
@@ -23,11 +22,9 @@ void rbtn_init(rbtn* btn, const bool active_low, button_state state_func)
     btn->click_ms                = 400;  // number of msecs before a click is detected.
     btn->press_ms                = 800;  // number of msecs before a long button press is detected
     btn->debounced_pin_level     = -1;
-    btn->debounced_pin_level     = -1;
     btn->last_debounce_pin_level = -1;  // used for pin debouncing
-    btn->max_clicks = 1;  // max number (1, 2, multi=3) of clicks of interest by registration of event functions.
-    btn->last_debounce_pin_level = -1;  // used for pin debouncing
-    btn->button_state_func       = state_func;
+    btn->max_clicks        = 1;  // max number (1, 2, multi=3) of clicks of interest by registration of event functions.
+    btn->button_state_func = state_func;
 
     if (active_low)
     {
@@ -180,10 +177,9 @@ static int debounce(rbtn* btn, const int value)
 
 void rbtn_tick(rbtn* btn)
 {
-    bool actual_state = btn->button_state_func();
-    int  value        = actual_state == (bool) btn->button_pressed ? 1 : 0;
-    int  deb          = debounce(btn, value);
-    fsm(btn, deb);
+    int  actual_value = (int) btn->button_state_func();
+    bool value        = debounce(btn, actual_value) == btn->button_pressed;
+    fsm(btn, value);
 }
 
 /**
