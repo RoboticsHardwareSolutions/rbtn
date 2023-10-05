@@ -1,4 +1,5 @@
 #pragma once
+
 enum state_machine
 {
     OCS_INIT     = 0,
