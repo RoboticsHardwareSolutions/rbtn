@@ -161,7 +161,7 @@ void rbtn_set_long_press_interval(rbtn* btn, const unsigned int ms)
  */
 static int debounce(rbtn* btn, const int value)
 {
-    btn->now = osKernelSysTick();  // current (relative) time in msecs.
+    btn->now = xTaskGetTickCount();  // current (relative) time in msecs.
     if (btn->last_debounce_pin_level == value)
     {
         if (btn->now - btn->last_debounce_time >= btn->debounce_ms)
@@ -218,7 +218,7 @@ void fsm(rbtn* btn, bool active_level)
             new_state(btn, OCS_UP);
             btn->start_time = btn->now;  // remember starting time
         }
-        else if ((active_level) && (wait_time > btn->press_ms))
+        else if (wait_time > btn->press_ms)
         {
             if (btn->long_press_start_func)
                 btn->long_press_start_func();
