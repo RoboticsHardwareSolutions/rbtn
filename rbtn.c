@@ -139,22 +139,22 @@ bool rbtn_is_idle(rbtn* btn)
 bool rbtn_is_long_pressed(rbtn* btn)
 {
     return btn->state == OCS_PRESS;
-};
+}
 
 int rbtn_debounced_value(rbtn* btn)
 {
     return btn->debounced_pin_level;
-};
+}
 
 unsigned long rbtn_get_pressed_ms(rbtn* btn)
 {
     return (osKernelSysTick() - btn->start_time);
-};
+}
 
 void rbtn_set_long_press_interval(rbtn* btn, const unsigned int ms)
 {
     btn->long_press_interval_ms = ms;
-};
+}
 
 /**
  * @brief Debounce input pin level for use in SpesialInput.
@@ -173,7 +173,7 @@ static int debounce(rbtn* btn, const int value)
         btn->last_debounce_pin_level = value;
     }
     return btn->debounced_pin_level;
-};
+}
 
 void rbtn_tick(rbtn* btn)
 {
