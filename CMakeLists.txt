@@ -16,7 +16,7 @@ if (TARGET freertos_kernel)
     target_link_libraries(${PROJECT_NAME} PUBLIC freertos_kernel)
 endif ()
 
-
+#################### FORMAT SECTION #######################
 include(FetchContent)
 FetchContent_Declare(
         rlibhelper
