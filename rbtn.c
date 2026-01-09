@@ -149,7 +149,7 @@ int rbtn_debounced_value(rbtn* btn)
 
 unsigned long rbtn_get_pressed_ms(rbtn* btn)
 {
-    return (xTaskGetTickCount() * ( configCPU_CLOCK_HZ / configTICK_RATE_HZ ) - btn->start_time);
+    return (xTaskGetTickCount() * (configCPU_CLOCK_HZ / configTICK_RATE_HZ) - btn->start_time);
 }
 
 void rbtn_set_long_press_interval(rbtn* btn, const unsigned int ms)
@@ -162,7 +162,7 @@ void rbtn_set_long_press_interval(rbtn* btn, const unsigned int ms)
  */
 static int debounce(rbtn* btn, const int value)
 {
-    btn->now = xTaskGetTickCount() * ( configCPU_CLOCK_HZ / configTICK_RATE_HZ );  // current (relative) time in msecs.
+    btn->now = xTaskGetTickCount() * (configCPU_CLOCK_HZ / configTICK_RATE_HZ);  // current (relative) time in msecs.
     if (btn->last_debounce_pin_level == value)
     {
         if (btn->now - btn->last_debounce_time >= btn->debounce_ms)

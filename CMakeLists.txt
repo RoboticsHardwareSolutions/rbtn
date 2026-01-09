@@ -15,3 +15,24 @@ target_include_directories(${PROJECT_NAME} PUBLIC
 if (TARGET freertos_kernel)
     target_link_libraries(${PROJECT_NAME} PUBLIC freertos_kernel)
 endif ()
+
+
+include(FetchContent)
+FetchContent_Declare(
+        rlibhelper
+        GIT_REPOSITORY https://github.com/RoboticsHardwareSolutions/rlibhelper.git
+        GIT_TAG main
+)
+FetchContent_MakeAvailable(rlibhelper)
+set(FILES_FOR_FORMATTING
+        rbtn.c
+        rbtn.h
+        rbtn_def.h
+)
+
+if (EXISTS "${rlibhelper_SOURCE_DIR}/format.cmake")
+    include(${rlibhelper_SOURCE_DIR}/format.cmake)
+else ()
+    message(WARNING "format.cmake file not found")
+endif ()
+format_files(${PROJECT_NAME} SOURCES ${FILES_FOR_FORMATTING})
