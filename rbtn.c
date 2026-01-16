@@ -19,9 +19,10 @@ void rbtn_init(rbtn* btn, const bool active_low, button_state state_func)
 {
     memset(btn, 0, sizeof(rbtn));
     btn->state                   = OCS_INIT;
-    btn->debounce_ms             = 50;   // number of msecs for debounce times.
-    btn->click_ms                = 400;  // number of msecs before a click is detected.
-    btn->press_ms                = 800;  // number of msecs before a long button press is detected
+    btn->debounce_ms             = 50;    // number of msecs for debounce times.
+    btn->click_ms                = 400;   // number of msecs before a click is detected.
+    btn->press_ms                = 800;   // number of msecs before a long button press is detected
+    btn->long_press_interval_ms  = 3000;  // number of msecs before a long button press is detected
     btn->debounced_pin_level     = -1;
     btn->last_debounce_pin_level = -1;  // used for pin debouncing
     btn->max_clicks        = 1;  // max number (1, 2, multi=3) of clicks of interest by registration of event functions.
@@ -149,7 +150,7 @@ int rbtn_debounced_value(rbtn* btn)
 
 unsigned long rbtn_get_pressed_ms(rbtn* btn)
 {
-    return (xTaskGetTickCount() * (configCPU_CLOCK_HZ / configTICK_RATE_HZ) - btn->start_time);
+    return (xTaskGetTickCount() * (1000 / configTICK_RATE_HZ) - btn->start_time);
 }
 
 void rbtn_set_long_press_interval(rbtn* btn, const unsigned int ms)
@@ -162,7 +163,7 @@ void rbtn_set_long_press_interval(rbtn* btn, const unsigned int ms)
  */
 static int debounce(rbtn* btn, const int value)
 {
-    btn->now = xTaskGetTickCount() * (configCPU_CLOCK_HZ / configTICK_RATE_HZ);  // current (relative) time in msecs.
+    btn->now = xTaskGetTickCount() * (1000 / configTICK_RATE_HZ);  // current (relative) time in msecs.
     if (btn->last_debounce_pin_level == value)
     {
         if (btn->now - btn->last_debounce_time >= btn->debounce_ms)
@@ -178,6 +179,8 @@ static int debounce(rbtn* btn, const int value)
 
 void rbtn_tick(rbtn* btn)
 {
+    if (!btn->button_state_func)
+        return;
     int  actual_value = (int) btn->button_state_func();
     bool value        = debounce(btn, actual_value) == btn->button_pressed;
     fsm(btn, value);
